@@ -7,7 +7,7 @@ import "./styles.css";
 
 enum StatusType {
     STOP="stop",
-    START="start",
+    RUN="run",
     WAIT="wait"
 }
 const DOUBLE_CLICK_TIME = 300;
@@ -24,7 +24,7 @@ const Stopwatch:React.FC = () => {
         interval(1000)
             .pipe(takeUntil(destroy$))
             .subscribe(() => {
-                if (status === StatusType.START) {
+                if (status === StatusType.RUN) {
                     setSeconds(val => ++val);
                 }
             });
@@ -35,7 +35,7 @@ const Stopwatch:React.FC = () => {
     }, [status]);
 
     const handleStartButtonClick = useCallback(() => {
-        setStatus(StatusType.START);
+        setStatus(StatusType.RUN);
     }, []);
     const handleStopButtonClick = useCallback(() => {
         setStatus(StatusType.STOP);
@@ -56,7 +56,7 @@ const Stopwatch:React.FC = () => {
         <>
             <h2>{formatTime(seconds)}</h2>
             <button className={"stopwatch-btn"}
-                    disabled={status === StatusType.START}
+                    disabled={status === StatusType.RUN}
                     onClick={handleStartButtonClick}>Start</button>
             <button className={"stopwatch-btn"}
                     disabled={status === StatusType.STOP}
