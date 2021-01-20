@@ -1,5 +1,5 @@
-export const formatTime = (timer: number) => {
+export const formatTime = (seconds: number) => {
     const date = new Date(0);
-    date.setSeconds(timer);
+    date.setSeconds(seconds);
     return date.toISOString().substr(11, 8);
 }

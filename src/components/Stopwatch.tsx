@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState, useCallback } from "react";
 import {interval, Subject} from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import {takeUntil} from "rxjs/operators";
 import {formatTime} from "../util/DateUtil";
 import "./styles.css";
 
@@ -44,28 +44,24 @@ const Stopwatch:React.FC = () => {
     }, []);
     const handleWaitButtonClick = useCallback(() => {
         const currentClickTime = new Date().getTime();
-        setPreviousClickTime(currentClickTime);
-        if (previousClickTime) {
-            if (currentClickTime - previousClickTime <= DOUBLE_CLICK_TIME) {
-                setStatus(StatusType.WAIT);
-            } else {
-                setPreviousClickTime(currentClickTime);
-            }
+        if (previousClickTime && currentClickTime - previousClickTime <= DOUBLE_CLICK_TIME) {
+            setStatus(StatusType.WAIT);
         }
+        setPreviousClickTime(currentClickTime);
     }, [previousClickTime]);
 
     return (
         <>
             <h2>{formatTime(seconds)}</h2>
-            <button className={"timer-btn blue"}
+            <button className={"stopwatch-btn"}
                     disabled={status === StatusType.START}
                     onClick={handleStartButtonClick}>Start</button>
-            <button className={"timer-btn red"}
+            <button className={"stopwatch-btn"}
                     disabled={status === StatusType.STOP}
                     onClick={handleStopButtonClick}>Stop</button>
-            <button className={"timer-btn orange"}
+            <button className={"stopwatch-btn"}
                     onClick={handleResetButtonClick}>Reset</button>
-            <button className={"timer-btn white"}
+            <button className={"stopwatch-btn"}
                     title={"Click twice to wait"}
                     disabled={status === StatusType.WAIT}
                     onClick={handleWaitButtonClick}>Wait</button>
