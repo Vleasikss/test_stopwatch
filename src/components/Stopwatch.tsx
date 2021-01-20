@@ -12,7 +12,7 @@ enum StatusType {
 }
 const DOUBLE_CLICK_TIME = 300;
 
-const Timer:React.FC = () => {
+const Stopwatch:React.FC = () => {
     const [seconds, setSeconds] = useState(0);
     const [status, setStatus] = useState<StatusType>(StatusType.STOP);
     const [previousClickTime, setPreviousClickTime] = useState(0);
@@ -73,4 +73,4 @@ const Timer:React.FC = () => {
     );
 }
 
-export default Timer;
+export default Stopwatch;
