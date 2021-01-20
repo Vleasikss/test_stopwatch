@@ -12,23 +12,25 @@ enum StatusType {
 }
 const DOUBLE_CLICK_TIME = 300;
 
+
+
 const Stopwatch:React.FC = () => {
     const [seconds, setSeconds] = useState(0);
     const [status, setStatus] = useState<StatusType>(StatusType.STOP);
     const [previousClickTime, setPreviousClickTime] = useState(0);
 
     useEffect(() => {
-        let unsubscribe$ = new Subject();
+        let destroy$:Subject<void> = new Subject();
         interval(1000)
-            .pipe(takeUntil(unsubscribe$))
+            .pipe(takeUntil(destroy$))
             .subscribe(() => {
                 if (status === StatusType.START) {
                     setSeconds(val => ++val);
                 }
             });
         return () => {
-            unsubscribe$.next();
-            unsubscribe$.complete();
+            destroy$.next();
+            destroy$.complete();
         };
     }, [status]);
 
