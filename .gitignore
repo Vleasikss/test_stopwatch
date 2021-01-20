@@ -11,6 +11,8 @@
 # IDE
 .idea
 
+.eslintcache
+
 
 # production
 /build
