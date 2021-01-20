@@ -1,10 +1,10 @@
 import React from "react";
-import Timer from "./components/Stopwatch";
+import Stopwatch from "./components/Stopwatch";
 
 const App:React.FC = () => {
     return (
         <div>
-           <Timer/>
+           <Stopwatch/>
         </div>
     );
 }
