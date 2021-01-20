@@ -1,0 +1,76 @@
+import React from "react";
+import { useEffect, useState, useCallback } from "react";
+import {interval, Subject} from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import {formatTime} from "../util/DateUtil";
+import "./styles.css";
+
+enum StatusType {
+    STOP="stop",
+    START="start",
+    WAIT="wait"
+}
+const DOUBLE_CLICK_TIME = 300;
+
+const Timer:React.FC = () => {
+    const [seconds, setSeconds] = useState(0);
+    const [status, setStatus] = useState<StatusType>(StatusType.STOP);
+    const [previousClickTime, setPreviousClickTime] = useState(0);
+
+    useEffect(() => {
+        let unsubscribe$ = new Subject();
+        interval(1000)
+            .pipe(takeUntil(unsubscribe$))
+            .subscribe(() => {
+                if (status === StatusType.START) {
+                    setSeconds(val => ++val);
+                }
+            });
+        return () => {
+            unsubscribe$.next();
+            unsubscribe$.complete();
+        };
+    }, [status]);
+
+    const handleStartButtonClick = useCallback(() => {
+        setStatus(StatusType.START);
+    }, []);
+    const handleStopButtonClick = useCallback(() => {
+        setStatus(StatusType.STOP);
+        setSeconds(0);
+    }, []);
+    const handleResetButtonClick = useCallback(() => {
+        setSeconds(0);
+    }, []);
+    const handleWaitButtonClick = useCallback(() => {
+        const currentClickTime = new Date().getTime();
+        setPreviousClickTime(currentClickTime);
+        if (previousClickTime) {
+            if (currentClickTime - previousClickTime <= DOUBLE_CLICK_TIME) {
+                setStatus(StatusType.WAIT);
+            } else {
+                setPreviousClickTime(currentClickTime);
+            }
+        }
+    }, [previousClickTime]);
+
+    return (
+        <>
+            <h2>{formatTime(seconds)}</h2>
+            <button className={"timer-btn blue"}
+                    disabled={status === StatusType.START}
+                    onClick={handleStartButtonClick}>Start</button>
+            <button className={"timer-btn red"}
+                    disabled={status === StatusType.STOP}
+                    onClick={handleStopButtonClick}>Stop</button>
+            <button className={"timer-btn orange"}
+                    onClick={handleResetButtonClick}>Reset</button>
+            <button className={"timer-btn white"}
+                    title={"Click twice to wait"}
+                    disabled={status === StatusType.WAIT}
+                    onClick={handleWaitButtonClick}>Wait</button>
+        </>
+    );
+}
+
+export default Timer;
